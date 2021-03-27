@@ -9,7 +9,8 @@
     <com.here.sdk.mapviewlite.MapViewLite
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.here.sdk.mapviewlite.MapViewLite>
+        android:layout_height="match_parent">
+    </com.here.sdk.mapviewlite.MapViewLite>
 
     <Button
         android:id="@+id/routeButton"
@@ -17,6 +18,16 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="Show route!"
+        app:layout_constraintBottom_toTopOf="@id/resetButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Reset"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -36,6 +47,7 @@
             android:id="@+id/rbFood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/black"
             android:paddingRight="10dp"
             android:text="Eat and drink"
             android:textColor="@color/black" />
@@ -44,6 +56,7 @@
             android:id="@+id/rbSleep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/black"
             android:paddingRight="10dp"
             android:text="Sleep"
             android:textColor="@color/black" />
@@ -52,6 +65,7 @@
             android:id="@+id/rbShop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/black"
             android:paddingRight="10dp"
             android:text="Shopping"
             android:textColor="@color/black" />

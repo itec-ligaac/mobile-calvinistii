@@ -51,6 +51,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MAIN ACTIVITY";
+
     private MapViewLite mapView;
     private RadioGroup radioGroupInterests;
 
@@ -72,9 +73,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         radioGroupInterests = findViewById(R.id.rgInterests);
+        RadioButton rbFood = (RadioButton) findViewById(R.id.rbFood);
+        rbFood.setChecked(true);
+
         placeCategory = PlaceCategory.EAT_AND_DRINK;
 
-        // Get a MapViewLite instance from the layout.
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
 
@@ -100,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initListeners() {
         Button routeButton = findViewById(R.id.routeButton);
+        Button resetButton = findViewById(R.id.resetButton);
         routeButton.setOnClickListener(v -> calculateRoute());
+        resetButton.setOnClickListener(v -> reset());
     }
 
     private void loadMapScene() {
@@ -199,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
     private void setLongPressGestureHandler() {
         mapView.getGestures().setLongPressListener(((gestureState, point2D) -> {
             if (gestureState == GestureState.BEGIN) {
-                addMarker(R.drawable.red_circle, mapView.getCamera().viewToGeoCoordinates(point2D), waypointsMarkers);
+                addMarker(R.drawable.map_marker, mapView.getCamera().viewToGeoCoordinates(point2D), waypointsMarkers);
                 waypoints.add(new Waypoint(mapView.getCamera().viewToGeoCoordinates(point2D)));
             }
         }));
@@ -211,14 +216,14 @@ public class MainActivity extends AppCompatActivity {
         Anchor2D anchor2D = new Anchor2D(0.5f, 1.0f);
 
         MapMarker mapMarker = new MapMarker(geoCoordinates);
-        mapMarker.addImage(mapImage, new MapMarkerImageStyle());
+
+        MapMarkerImageStyle mapMarkerImageStyle = new MapMarkerImageStyle();
+        mapMarkerImageStyle.setAnchorPoint(anchor2D);
+
+        mapMarker.addImage(mapImage, mapMarkerImageStyle);
 
         mapView.getMapScene().addMapMarker(mapMarker);
         markers.add(mapMarker);
-    }
-
-    private void moveTo(GeoCoordinates geoCoordinates) {
-        mapView.getCamera().setTarget(geoCoordinates);
     }
 
     private void searchForCategories(GeoCoordinates geoCoordinates) {
@@ -226,20 +231,14 @@ public class MainActivity extends AppCompatActivity {
         categoryList.add(new PlaceCategory(placeCategory));
         CategoryQuery categoryQuery = new CategoryQuery(categoryList, geoCoordinates);
 
-        int maxItems = 30;
+        int maxItems = 10;
         SearchOptions searchOptions = new SearchOptions(LanguageCode.EN_US, maxItems);
 
         searchEngine.search(categoryQuery, searchOptions, new SearchCallback() {
             @Override
             public void onSearchCompleted(SearchError searchError, List<Place> list) {
-                if (searchError != null) {
-//                    infoTextview.setText("Search Error: " + searchError.toString());
-                    return;
-                }
 
-                // If error is null, list is guaranteed to be not empty.
                 String numberOfResults = "Search results: " + list.size() + ". See log for details.";
-//                infoTextview.setText(numberOfResults);
 
                 for (Place searchResult : list) {
 
@@ -259,6 +258,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void reset() {
+        recreate();
     }
 
     @Override
